@@ -44,7 +44,7 @@ public class UserDataSourceConfig extends AbstractDataSourceConfig {
                 env.getProperty("user.datasource.url"),
                 env.getProperty("user.datasource.username"),
                 env.getProperty("user.datasource.password"),
-                env.getProperty("user.datasource.driver-class-name"));
+                "org.h2.Driver");
     }
 
 

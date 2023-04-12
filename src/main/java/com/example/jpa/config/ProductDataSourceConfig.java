@@ -49,7 +49,7 @@ public class ProductDataSourceConfig extends AbstractDataSourceConfig {
                 env.getProperty("product.datasource.url"),
                 env.getProperty("product.datasource.username"),
                 env.getProperty("product.datasource.password"),
-                env.getProperty("product.datasource.driver-class-name"));
+                "org.h2.Driver");
     }
 
 

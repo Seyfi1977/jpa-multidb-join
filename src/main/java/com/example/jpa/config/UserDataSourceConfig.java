@@ -19,27 +19,32 @@ public class UserDataSourceConfig extends AbstractDataSourceConfig {
 
     @Autowired
     private Environment env;
+    private static final String USER_PU = "userPU";
 
     @Bean
-    public LocalContainerEntityManagerFactoryBean userEntityManagerFactory(JpaProperties properties, HibernateSettings settings) {
-        return createEntityManagerFactory(properties, settings, userDataSource(), "com.example.jpa.entity.user");
+    @ConfigurationProperties("spring.jpa.user")
+    public JpaProperties userJpaProperties() {
+        return new JpaProperties();
+    }
+
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean userEntityManagerFactory(
+            JpaProperties userJpaProperties) {
+
+        return createEntityManagerFactory(
+                userDataSource(),
+                "user",
+                userJpaProperties);
     }
 
     @Bean
     public DataSource userDataSource() {
-        return createDataSource();
-    }
-
-    @Bean
-    public LocalContainerEntityManagerFactoryBean userEntityManagerFactory(
-            JpaProperties jpaProperties) {
-        DataSource dataSource = createDataSource(
-                env.getProperty("spring.datasource.user.url"),
-                env.getProperty("spring.datasource.user.username"),
-                env.getProperty("spring.datasource.user.password"),
-                env.getProperty("spring.datasource.user.driver-class-name")
-        );
-        return createEntityManagerFactory(dataSource, "com.example.jpa.entity.user", jpaProperties);
+        return createDataSource(
+                env.getProperty("user.datasource.url"),
+                env.getProperty("user.datasource.username"),
+                env.getProperty("user.datasource.password"),
+                env.getProperty("user.datasource.driver-class-name"));
     }
 
 

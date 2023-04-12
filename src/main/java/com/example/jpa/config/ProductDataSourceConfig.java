@@ -1,5 +1,7 @@
 package com.example.jpa.config;
 
+import org.hibernate.cfg.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,6 +19,9 @@ import static javax.persistence.Persistence.createEntityManagerFactory;
 @ConfigurationProperties("app.datasource.product")
 public class ProductDataSourceConfig extends AbstractDataSourceConfig {
 
+    @Autowired
+    private Environment env;
+
     @Bean
     public LocalContainerEntityManagerFactoryBean productEntityManagerFactory(JpaProperties properties, HibernateSettings settings) {
         return createEntityManagerFactory(properties, settings, productDataSource(), "com.example.jpa.entity.product");
@@ -27,4 +32,27 @@ public class ProductDataSourceConfig extends AbstractDataSourceConfig {
         return createDataSource();
     }
 
+    @Bean
+    public LocalContainerEntityManagerFactoryBean productEntityManagerFactory(
+            JpaProperties jpaProperties) {
+        DataSource dataSource = createDataSource(
+                env.getProperty("spring.datasource.product.url"),
+                env.getProperty("spring.datasource.product.username"),
+                env.getProperty("spring.datasource.product.password"),
+                env.getProperty("spring.datasource.product.driver-class-name")
+        );
+        return createEntityManagerFactory(dataSource, "com.example.jpa.entity.product", jpaProperties);
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean productEntityManagerFactory(
+            JpaProperties jpaProperties) {
+        DataSource dataSource = createDataSource(
+                env.getProperty("spring.datasource.product.url"),
+                env.getProperty("spring.datasource.product.username"),
+                env.getProperty("spring.datasource.product.password"),
+                env.getProperty("spring.datasource.product.driver-class-name")
+        );
+        return createEntityManagerFactory(dataSource, "com.example.jpa.entity.product", jpaProperties);
+    }
 }
